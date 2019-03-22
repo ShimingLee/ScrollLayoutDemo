@@ -20,6 +20,7 @@ public class MyScrollLayout extends ViewGroup {
     private static final int TOUCH_STATE_FLING=0x002;
     private int touchState=TOUCH_STATE_STOP;
     private float lastionMotionY=0;
+    private int componentHeight;
 //    private float lastionMotionY=0;
     private int curScreen;
 
@@ -102,18 +103,21 @@ public class MyScrollLayout extends ViewGroup {
 
             child.layout(left,top,right,bottom);
         }
+        Log.i(TAG, "onLayout: getChildAt(0): "+getChildAt(0).getBackground());
         topBorder = getChildAt(0).getTop();
+        Log.i(TAG, "onLayout: getChildAt(getChildCount()-1): "+getChildAt(getChildCount()-1).getBackground());
         bottomBorder = getChildAt(getChildCount() - 1).getBottom();
+        getChildAt(0).getHeight();
     }
 
     public void moveToScreen(int whichScreen){
         curScreen=whichScreen;
-//        if(curScreen>getChildCount()-1){
-//            curScreen=getChildCount()-1;
-//        }
-//        if(curScreen<0){
-//            curScreen=0;
-//        }
+        if(curScreen>getChildCount()-1){
+            curScreen=getChildCount()-1;
+        }
+        if(curScreen<0){
+            curScreen=0;
+        }
         int scrollY=getScrollY();
         int splitHeight=getHeight()/getChildCount();    //每一屏的宽度
         int dy=curScreen*splitHeight-scrollY;        //要移动的距离
@@ -208,7 +212,7 @@ public class MyScrollLayout extends ViewGroup {
                     moveToPrevious();
                 }else if (velocityY<-SNAP_VELOCITY&&curScreen<(getChildCount()-1)){
                     moveToNext();
-                }else {
+                }else{
                     moveToDestination();
                 }
                 if (mVelocityTracker != null) {
